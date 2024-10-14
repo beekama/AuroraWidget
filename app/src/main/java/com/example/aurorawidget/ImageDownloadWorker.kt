@@ -18,6 +18,12 @@ class ImageDownloadWorker(context: Context, workerParams: WorkerParameters) :
             val connection = imageUrl.openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
 
+            // Disable caching (headers)
+            connection.useCaches = false
+            connection.defaultUseCaches = false
+            connection.addRequestProperty("Cache-Control", "no-cache")
+            connection.addRequestProperty("Pragma", "no-cache")
+
             // save in internal Storage
             val imgFile = File(applicationContext.filesDir, "aurora_forecast.png")
             val inputStream = connection.inputStream
