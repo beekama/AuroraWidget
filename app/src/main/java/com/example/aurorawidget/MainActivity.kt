@@ -1,5 +1,9 @@
 package com.example.aurorawidget
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
@@ -31,13 +35,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         // WorkManager - download image in background every 3 hours (also when app is closed)
-        startImageDownloadWorker(imageView)
+        startImageDownloadWorker()
     }
 
-    private fun startImageDownloadWorker(imageView: ImageView) {
+    private fun startImageDownloadWorker() {
         val downloadRequest = PeriodicWorkRequestBuilder<ImageDownloadWorker>(3, TimeUnit.HOURS)
             .build()
-        loadImageFromStorage(imageView)
         WorkManager.getInstance(this).enqueue(downloadRequest)
     }
 

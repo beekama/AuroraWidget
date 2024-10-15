@@ -1,6 +1,10 @@
 package com.example.aurorawidget
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import java.io.File
@@ -39,8 +43,20 @@ class ImageDownloadWorker(context: Context, workerParams: WorkerParameters) :
                     }
                 }
             }
-            Result.success()
 
+            // AKTUALISIERE WIDGET
+            val intent = Intent(applicationContext, ImageWidgetProvider::class.java)
+            intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+
+            // Hole alle Widget-IDs
+            val ids = AppWidgetManager.getInstance(applicationContext)
+                .getAppWidgetIds(ComponentName(applicationContext, ImageWidgetProvider::class.java))
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+
+            // Sende die Broadcast-Nachricht, um das Widget zu aktualisieren
+            applicationContext.sendBroadcast(intent)
+
+            Result.success()
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure()
